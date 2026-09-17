@@ -1,0 +1,22 @@
+# Neovim generated files
+*.swp
+*.swo
+*.swn
+*.tmp
+*.bak
+
+# Neovim undo/backup/swap directories
+.undodir/
+.backup/
+.swap/
+
+# Plugin manager / generated plugin data
+lazy-lock.json
+
+# Local machine-specific files
+.local.lua
+.local/
+
+# OS files
+.DS_Store
+Thumbs.db
