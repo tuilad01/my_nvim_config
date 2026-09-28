@@ -13,6 +13,8 @@ vim.opt.termguicolors = true
 vim.opt.hlsearch = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.grepprg = "rg --vimgrep --smart-case"
+vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
+
 --
 -- vim.api.nvim_create_autocmd("WinEnter", {
 -- 	callback = function()
@@ -32,6 +34,7 @@ vim.keymap.set({ 'n', 'v' }, '<leader>f', function() vim.lsp.buf.format() end, {
 -- for quickfix list
 vim.keymap.set("n", "<leader>co", "<cmd>copen<CR>", { desc = "Open quickfix", })
 vim.keymap.set("n", "<leader>cc", "<cmd>cclose<CR>", { desc = "Close quickfix", })
+
 vim.keymap.set("n", "∆", "<cmd>cnext<CR>", { desc = "Next quickfix", })
 vim.keymap.set("n", "˚", "<cmd>cprev<CR>", { desc = "Previous quickfix", })
 
@@ -56,8 +59,8 @@ vim.keymap.set("n", "<C-k>", "<C-w>k")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
 -- Resize windows using Control + Shift + Arrow keys
 vim.keymap.set('n', '<C-Up>', ':resize +2<CR>', { desc = 'Resize split up' })
-vim.keymap.set('n', '<C-Down>',':resize -2<CR>', { desc = 'Resize split down' })
-vim.keymap.set('n', '<C-Left>',':vertical resize -2<CR>', { desc = 'Resize split left' })
+vim.keymap.set('n', '<C-Down>', ':resize -2<CR>', { desc = 'Resize split down' })
+vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', { desc = 'Resize split left' })
 vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>', { desc = 'Resize split right' })
 
 
@@ -93,6 +96,8 @@ vim.pack.add({
 	-- "https://github.com/sphamba/smear-cursor.nvim",
 	-- "https://github.com/akinsho/bufferline.nvim",
 	"https://github.com/nvim-lualine/lualine.nvim",
+	"https://github.com/nanozuki/tabby.nvim",
+	"https://github.com/sindrets/diffview.nvim",
 })
 
 require("catppuccin").setup({
@@ -104,9 +109,8 @@ require("catppuccin").setup({
 	},
 })
 vim.cmd.colorscheme "catppuccin-nvim"
-
 require('lualine').setup()
-
+require("Tabby").setup()
 -- require("bufferline").setup({
 -- 	options = {
 -- 		separator_style = "slant",
@@ -136,15 +140,15 @@ cmp.setup({
 		},
 	},
 	cmdline = {
-    keymap = {
-      preset = "cmdline",
-    },
-    completion = {
-      menu = {
-        auto_show = true,
-      },
-    },
-  },
+		keymap = {
+			preset = "cmdline",
+		},
+		completion = {
+			menu = {
+				auto_show = true,
+			},
+		},
+	},
 	signature = {
 		enabled = true,
 		window = {
