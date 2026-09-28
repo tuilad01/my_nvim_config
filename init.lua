@@ -1,8 +1,13 @@
+-- netrw setup
+
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 3
+
 -- Make sure to setup `mapleader` and `maplocalleader` before
 -- loading lazy.nvim so that mappings are correct.
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+vim.g.maplocalleader = " "
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.shiftwidth = 2
@@ -180,3 +185,4 @@ vim.lsp.enable({ "lua_ls", "rust_analyzer" })
 -- Custom command
 require("plugins.search_custom")
 require("plugins.resize")
+require("plugins.maps")
