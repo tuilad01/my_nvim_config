@@ -1,7 +1,10 @@
 -- netrw setup
 
-vim.g.netrw_banner = 0
-vim.g.netrw_liststyle = 3
+-- vim.g.netrw_banner = 0
+-- vim.g.netrw_liststyle = 3
+
+
+
 
 -- Make sure to setup `mapleader` and `maplocalleader` before
 -- loading lazy.nvim so that mappings are correct.
@@ -103,6 +106,13 @@ vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/nanozuki/tabby.nvim",
 	"https://github.com/sindrets/diffview.nvim",
+	{
+		src = 'https://github.com/nvim-neo-tree/neo-tree.nvim',
+		version = vim.version.range('3')
+	},
+	-- dependencies
+	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/MunifTanjim/nui.nvim",
 })
 
 require("catppuccin").setup({
@@ -181,6 +191,25 @@ vim.lsp.enable({ "lua_ls", "rust_analyzer" })
 -- vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
 -- vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
 -- vim.api.nvim_set_hl(0, "FoldColumn", { bg = "none" })
+
+vim.keymap.set("n", "<leader>e", "<Cmd>Neotree<CR>")
+require("neo-tree").setup({
+	filesystem = {
+		filtered_items = {
+			visible = true,
+		},
+		follow_current_file = {
+			enabled = true,
+			leave_dirs_open = true,
+		},
+	},
+	window = {
+		mappings = {
+			["Z"] = "expand_all_subnodes",
+		},
+	},
+})
+
 
 -- Custom command
 require("plugins.search_custom")
