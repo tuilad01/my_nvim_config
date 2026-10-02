@@ -38,6 +38,7 @@ vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 --
 -- Keymap
 
+vim.keymap.set({ 'n', 'v' }, '<leader>pv', "<cmd>Ex<CR>", { desc = "Netrw Project View" })
 vim.keymap.set({ 'n', 'v' }, '<leader>f', function() vim.lsp.buf.format() end, { desc = "Format current buffer" })
 -- for quickfix list
 vim.keymap.set("n", "<leader>co", "<cmd>copen<CR>", { desc = "Open quickfix", })
@@ -106,13 +107,13 @@ vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/nanozuki/tabby.nvim",
 	"https://github.com/sindrets/diffview.nvim",
-	{
-		src = 'https://github.com/nvim-neo-tree/neo-tree.nvim',
-		version = vim.version.range('3')
-	},
-	-- dependencies
-	"https://github.com/nvim-lua/plenary.nvim",
-	"https://github.com/MunifTanjim/nui.nvim",
+	-- {
+	-- 	src = 'https://github.com/nvim-neo-tree/neo-tree.nvim',
+	-- 	version = vim.version.range('3')
+	-- },
+	-- -- dependencies
+	-- "https://github.com/nvim-lua/plenary.nvim",
+	-- "https://github.com/MunifTanjim/nui.nvim",
 })
 
 require("catppuccin").setup({
@@ -192,26 +193,27 @@ vim.lsp.enable({ "lua_ls", "rust_analyzer" })
 -- vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
 -- vim.api.nvim_set_hl(0, "FoldColumn", { bg = "none" })
 
-vim.keymap.set("n", "<leader>e", "<Cmd>Neotree<CR>")
-require("neo-tree").setup({
-	filesystem = {
-		filtered_items = {
-			visible = true,
-		},
-		follow_current_file = {
-			enabled = true,
-			leave_dirs_open = true,
-		},
-	},
-	window = {
-		mappings = {
-			["Z"] = "expand_all_subnodes",
-		},
-	},
-})
+-- vim.keymap.set("n", "<leader>e", "<Cmd>Neotree<CR>")
+-- require("neo-tree").setup({
+-- 	filesystem = {
+-- 		filtered_items = {
+-- 			visible = true,
+-- 		},
+-- 		follow_current_file = {
+-- 			enabled = true,
+-- 			leave_dirs_open = true,
+-- 		},
+-- 	},
+-- 	window = {
+-- 		mappings = {
+-- 			["Z"] = "expand_all_subnodes",
+-- 		},
+-- 	},
+-- })
 
 
 -- Custom command
 require("plugins.search_custom")
 require("plugins.resize")
 require("plugins.maps")
+require("plugins.tree")
