@@ -232,6 +232,99 @@ local function copy_node_path()
 	vim.notify("Copied: " .. node.path)
 end
 
+local function search_tree_include(nodes, dir_query, file_query, parents)
+	parents = parents or {}
+
+	for _, node in ipairs(nodes) do
+		if node.is_dir then
+			table.insert(parents, node)
+
+			search_tree_include(
+				node.children,
+				dir_query,
+				file_query,
+				parents
+			)
+
+			table.remove(parents)
+		else
+			local file_match =
+					node.name:lower():find(file_query, 1, true)
+
+			local dir_match = false
+
+			for _, parent in ipairs(parents) do
+				if parent.name:lower():find(dir_query, 1, true) then
+					dir_match = true
+					break
+				end
+			end
+
+			if file_match and dir_match then
+				for _, parent in ipairs(parents) do
+					parent.expand = true
+				end
+			end
+		end
+	end
+end
+
+local function perform_search_include(dir_query, file_query)
+	collapse_all(tree)
+
+	dir_query = dir_query:lower()
+	file_query = file_query:lower()
+
+	search_tree_include(
+		tree,
+		dir_query,
+		file_query
+	)
+
+	render()
+
+	-- Move cursor to the first visible matching file
+	for line, node in pairs(line_nodes) do
+		if not node.is_dir
+				and node.name:lower():find(file_query, 1, true)
+		then
+			local has_dir_match = false
+			local path = node.path:lower()
+
+			if path:find(dir_query, 1, true) then
+				has_dir_match = true
+			end
+
+			if has_dir_match then
+				-- vim.api.nvim_win_set_cursor(0, { line, 0 })
+
+				set_hlsearch(node.name)
+				vim.api.nvim_feedkeys("n", "n", false)
+
+				break
+			end
+		end
+	end
+end
+
+vim.api.nvim_create_user_command("BuildTreeFindInclude", function(opts)
+	local dir_query = opts.fargs[1]
+	local file_query = opts.fargs[2]
+
+	if not dir_query or not file_query then
+		vim.notify(
+			"Usage: BuildTreeFindInclude <directory> <filename>",
+			vim.log.levels.ERROR
+		)
+		return
+	end
+
+	perform_search_include(dir_query, file_query)
+end, {
+	nargs = "*",
+	desc = "Find file by directory and filename",
+})
+
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "mytree",
 	callback = function(args)
