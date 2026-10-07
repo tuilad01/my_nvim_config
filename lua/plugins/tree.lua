@@ -186,18 +186,12 @@ local function perform_search(query)
 	render()
 end
 
+function set_hlsearch(query)
+	vim.fn.setreg("/", query)
+	vim.opt.hlsearch = true
+end
+
 local function search(opts)
-	-- vim.ui.input({
-	-- 	prompt = "Find: ",
-	-- 	default = search_query,
-	-- }, function(input)
-	-- 	if input == nil then
-	-- 		return
-	-- 	end
-	--
-	-- 	search_query = input
-	-- 	perform_search(search_query)
-	-- end)
 	local input = opts.args
 	if input == nil then
 		return
@@ -205,10 +199,38 @@ local function search(opts)
 
 	search_query = input
 	perform_search(search_query)
+
+	set_hlsearch(search_query)
+	vim.api.nvim_feedkeys("n", "n", false)
 end
 
-vim.api.nvim_create_user_command("BuildTreeFind", search, { nargs = "*", desc = "Build tree" })
+vim.api.nvim_create_user_command("BuildTreeFind", function(opts)
+	search(opts)
+end, { nargs = "*", desc = "Build tree" })
 
+local function show_node_path()
+	local line = vim.api.nvim_win_get_cursor(0)[1]
+	local node = line_nodes[line]
+
+	if not node then
+		return
+	end
+
+	vim.notify(node.path, vim.log.levels.INFO)
+end
+
+local function copy_node_path()
+	local line = vim.api.nvim_win_get_cursor(0)[1]
+	local node = line_nodes[line]
+
+	if not node then
+		return
+	end
+
+	vim.fn.setreg("+", node.path)
+
+	vim.notify("Copied: " .. node.path)
+end
 
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "mytree",
@@ -230,9 +252,44 @@ vim.api.nvim_create_autocmd("FileType", {
 			silent = true,
 		})
 
-		vim.keymap.set("n", "/", search, {
-			buffer = bufnr,
+		vim.keymap.set("n", "K", show_node_path, {
+			buffer = buf,
+			silent = true,
+		})
+
+		vim.keymap.set("n", "<leader>cp", copy_node_path, {
+			buffer = buf,
+			silent = true,
+		})
+
+		vim.keymap.set("n", "<leader>f", function()
+			vim.api.nvim_feedkeys(
+				vim.api.nvim_replace_termcodes(":BuildTreeFind ", true, false, true),
+				"n",
+				false
+			)
+		end, {
+			buffer = buf,
 			silent = true,
 		})
 	end,
+})
+
+vim.keymap.set("n", "<C-p>", function()
+	local filename = vim.fn.expand("%:t")
+
+	vim.cmd("BuildTree")
+
+	if filename ~= nil and filename ~= "" then
+		vim.cmd(":BuildTreeFind " .. vim.fn.fnameescape(filename))
+		return
+	end
+
+	vim.api.nvim_feedkeys(
+		vim.api.nvim_replace_termcodes(":BuildTreeFind " .. vim.fn.fnameescape(filename), true, false, true),
+		"n",
+		false
+	)
+end, {
+	desc = "BuildTree Find",
 })
