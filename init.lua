@@ -39,7 +39,12 @@ vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 -- Keymap
 
 vim.keymap.set({ 'n', 'v' }, '<leader>pv', "<cmd>Ex<CR>", { desc = "Netrw Project View" })
-vim.keymap.set({ 'n', 'v' }, '<leader>f', function() vim.lsp.buf.format() end, { desc = "Format current buffer" })
+vim.keymap.set({ 'n', 'v' }, '<leader>ff', function() vim.lsp.buf.format() end, { desc = "Format current buffer" })
+vim.keymap.set({ 'n', 'v' }, '<leader>fp', function() 
+	local filePath = vim.fn.expand("%:p")
+	vim.notify(filePath, vim.log.levels.INFO)
+ end, { desc = "Display file path" })
+
 -- for quickfix list
 vim.keymap.set("n", "<leader>co", "<cmd>copen<CR>", { desc = "Open quickfix", })
 vim.keymap.set("n", "<leader>cc", "<cmd>cclose<CR>", { desc = "Close quickfix", })
