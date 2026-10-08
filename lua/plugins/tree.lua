@@ -6,6 +6,8 @@ local excluded = {
 	["bin"] = true,
 	["obj"] = true,
 	[".angular"] = true,
+	["dist"] = true,
+	["build"] = true,
 }
 
 local function build_tree(path)
@@ -197,7 +199,7 @@ local function search(opts)
 		return
 	end
 
-	search_query = input
+	search_query = input:lower()
 	perform_search(search_query)
 
 	set_hlsearch(search_query)
